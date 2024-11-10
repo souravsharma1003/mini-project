@@ -11,9 +11,9 @@ import { AiOutlineSwapRight } from 'react-icons/ai';
 import { MdMarkEmailRead } from 'react-icons/md';
 
 const Register = () => {
-    const [Email, setEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [userName, setUserName] = useState('');
-    const [Password, setPassword] = useState('');
+    const [password, setPassword] = useState('');
     const [registerStatus, setRegisterStatus] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const navigateTo = useNavigate();
@@ -24,9 +24,9 @@ const Register = () => {
 
         // Send the registration data to the backend in JSON format
         Axios.post('https://mini-project-api-six.vercel.app/auth/signup', {
-            email:Email,
+            email:email,
             username: userName,
-            password:Password,
+            password:password
         })
             .then((response) => {
                 setIsLoading(false);

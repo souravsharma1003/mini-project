@@ -15,19 +15,21 @@ const Register = () => {
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [registerStatus, setRegisterStatus] = useState('');
-    const [statusHolder, setStatusHolder] = useState('message');
+    const [isLoading, setIsLoading] = useState(false);
     const navigateTo = useNavigate();
 
     const handleSignup = (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         // Send the registration data to the backend in JSON format
         Axios.post('https://mini-project-api-six.vercel.app/auth/signup', {
-            email: email,
+            email,
             username: userName,
-            password: password
+            password,
         })
             .then((response) => {
+                setIsLoading(false);
                 if (response.data.success) {
                     setRegisterStatus('Registration successful!');
                     setTimeout(() => {
@@ -38,37 +40,28 @@ const Register = () => {
                 }
             })
             .catch((error) => {
+                setIsLoading(false);
                 setRegisterStatus(error.response ? error.response.data.message : 'An error occurred.');
-                console.log(error);
+                console.error(error);
             });
-
-        // Clear input fields after submission
-        setEmail('');
-        setUserName('');
-        setPassword('');
     };
 
     useEffect(() => {
         if (registerStatus) {
-            setStatusHolder('showMessage');
-            setTimeout(() => {
-                setStatusHolder('message');
-            }, 2000);
+            const timer = setTimeout(() => setRegisterStatus(''), 2000);
+            return () => clearTimeout(timer);
         }
     }, [registerStatus]);
 
     return (
         <div className="registerPage flex">
             <div className="container flex">
-
                 <div className="videoDiv">
                     <video src={video} autoPlay muted loop></video>
-
                     <div className="textDiv">
                         <h2 className="title">Detect and Diagnose Bone Fractures with AI Precision</h2>
                         <p>AI-Powered Bone Fracture Detection!</p>
                     </div>
-
                     <div className="footerDiv flex">
                         <span className="text">Have an account?</span>
                         <Link to={'/login'}>
@@ -84,18 +77,20 @@ const Register = () => {
                     </div>
 
                     <form className="form grid" onSubmit={handleSignup}>
-                        {/* Display registration status */}
-                        <span className={statusHolder}>{registerStatus}</span>
+                        <span className={`statusMessage ${registerStatus ? 'showMessage' : ''}`}>
+                            {registerStatus}
+                        </span>
 
                         <div className="inputDiv">
                             <label htmlFor="email">Email</label>
                             <div className="input flex">
-                                <MdMarkEmailRead className="icon" />
+                                <MdMarkEmailRead className="icon" aria-hidden="true" />
                                 <input
                                     type="email"
                                     id="email"
                                     placeholder="Enter Email"
-                                    onChange={(event) => setEmail(event.target.value)}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={email}
                                     required
                                 />
                             </div>
@@ -104,12 +99,13 @@ const Register = () => {
                         <div className="inputDiv">
                             <label htmlFor="username">Username</label>
                             <div className="input flex">
-                                <FaUserShield className="icon" />
+                                <FaUserShield className="icon" aria-hidden="true" />
                                 <input
                                     type="text"
                                     id="username"
                                     placeholder="Enter Username"
-                                    onChange={(event) => setUserName(event.target.value)}
+                                    onChange={(e) => setUserName(e.target.value)}
+                                    value={userName}
                                     required
                                 />
                             </div>
@@ -118,24 +114,28 @@ const Register = () => {
                         <div className="inputDiv">
                             <label htmlFor="password">Password</label>
                             <div className="input flex">
-                                <BsFillShieldLockFill className="icon" />
+                                <BsFillShieldLockFill className="icon" aria-hidden="true" />
                                 <input
                                     type="password"
                                     id="password"
                                     placeholder="Enter Password"
-                                    onChange={(event) => setPassword(event.target.value)}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={password}
                                     required
                                 />
                             </div>
                         </div>
 
-                        <button type="submit" className="btn flex">
-                            <span>Register</span>
-                            <AiOutlineSwapRight className="icon" />
+                        <button type="submit" className="btn flex" disabled={isLoading}>
+                            {isLoading ? 'Registering...' : (
+                                <>
+                                    <span>Register</span>
+                                    <AiOutlineSwapRight className="icon" aria-hidden="true" />
+                                </>
+                            )}
                         </button>
                     </form>
                 </div>
-
             </div>
         </div>
     );

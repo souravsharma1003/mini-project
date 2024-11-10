@@ -18,7 +18,7 @@ const Login = () => {
 
     const loginUser = (e) => {
         e.preventDefault();
-        Axios.post('http://localhost:8080/auth/login', {
+        Axios.post('https://mini-project-api-six.vercel.app/auth/login', {
             username: loginUserName,
             password: loginPassword
         })

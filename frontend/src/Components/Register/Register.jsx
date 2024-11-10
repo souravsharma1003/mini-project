@@ -22,7 +22,7 @@ const Register = () => {
         e.preventDefault();
 
         // Send the registration data to the backend in JSON format
-        Axios.post('http://localhost:8080/auth/signup', {
+        Axios.post('https://mini-project-api-six.vercel.app/auth/signup', {
             email: email,
             username: userName,
             password: password

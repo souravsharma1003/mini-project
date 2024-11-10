@@ -16,17 +16,20 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [registerStatus, setRegisterStatus] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState({});
     const navigateTo = useNavigate();
 
     const handleSignup = (e) => {
         e.preventDefault();
         setIsLoading(true);
 
-        // Send the registration data to the backend in JSON format
+        // Reset errors before starting a new request
+        setErrors({});
+
         Axios.post('https://mini-project-api-six.vercel.app/auth/signup', {
-            email:email,
+            email: email,
             username: userName,
-            password:password
+            password: password
         })
             .then((response) => {
                 setIsLoading(false);
@@ -34,15 +37,19 @@ const Register = () => {
                     setRegisterStatus('Registration successful!');
                     setTimeout(() => {
                         navigateTo('/login');
-                    }, 2000); // Redirect to login after 2 seconds
+                    }, 2000);
                 } else {
                     setRegisterStatus(response.data.message || 'Signup failed.');
                 }
             })
             .catch((error) => {
                 setIsLoading(false);
-                setRegisterStatus(error.response ? error.response.data.message : 'An error occurred.');
-                console.error(error);
+                if (error.response && error.response.data.errors) {
+                    // Handle the field-specific errors sent from the backend
+                    setErrors(error.response.data.errors);
+                } else {
+                    setRegisterStatus(error.response ? error.response.data.message : 'An error occurred.');
+                }
             });
     };
 
@@ -77,7 +84,11 @@ const Register = () => {
                     </div>
 
                     <form className="form grid" onSubmit={handleSignup}>
-                        <span className={`statusMessage ${registerStatus ? 'showMessage' : ''}`}>
+                        {/* Status message */}
+                        <span
+                            className={`statusMessage ${registerStatus ? 'showMessage' : ''} ${registerStatus === 'Registration successful!' ? 'successMessage' : ''}`}
+                            aria-live="assertive"
+                        >
                             {registerStatus}
                         </span>
 
@@ -94,6 +105,7 @@ const Register = () => {
                                     required
                                 />
                             </div>
+                            {errors.email && <small className="errorText">{errors.email.join(', ')}</small>}
                         </div>
 
                         <div className="inputDiv">
@@ -109,6 +121,7 @@ const Register = () => {
                                     required
                                 />
                             </div>
+                            {errors.username && <small className="errorText">{errors.username.join(', ')}</small>}
                         </div>
 
                         <div className="inputDiv">
@@ -124,10 +137,13 @@ const Register = () => {
                                     required
                                 />
                             </div>
+                            {errors.password && <small className="errorText">{errors.password.join(', ')}</small>}
                         </div>
 
                         <button type="submit" className="btn flex" disabled={isLoading}>
-                            {isLoading ? 'Registering...' : (
+                            {isLoading ? (
+                                <div className="spinner"></div>
+                            ) : (
                                 <>
                                     <span>Register</span>
                                     <AiOutlineSwapRight className="icon" aria-hidden="true" />

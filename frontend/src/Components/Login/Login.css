@@ -1,1 +1,26 @@
 /*# sourceMappingURL=Login.css.map */
+/* Success Message Styling */
+.showMessage {
+    display: block;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.message {
+    display: none;
+}
+
+.successMessage {
+    color: hsl(94, 55%, 56%);
+    font-weight: bold;
+    padding: 10px;
+    background-color: rgba(0, 255, 0, 0.1);
+    border-radius: 5px;
+}
+
+.errorText {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}

@@ -40,6 +40,9 @@ const Register = () => {
                     }, 2000);
                 } else {
                     setRegisterStatus(response.data.message || 'Signup failed.');
+                    setEmail('');
+                    setUserName('');
+                    setPassword('');
                 }
             })
             .catch((error) => {
@@ -50,6 +53,10 @@ const Register = () => {
                 } else {
                     setRegisterStatus(error.response ? error.response.data.message : 'An error occurred.');
                 }
+                // Clear form fields on failed attempt
+                setEmail('');
+                setUserName('');
+                setPassword('');
             });
     };
 

@@ -88,7 +88,12 @@ const Login = () => {
 
                     <form className="form grid" onSubmit={loginUser}>
                         {/* Status message */}
-                        <span className={statusHolder}>{loginStatus}</span>
+                        <span
+                            className={`statusMessage ${loginStatus ? 'showMessage' : ''} ${loginStatus === 'Login successful!' ? 'successMessage' : ''}`}
+                            aria-live="assertive"
+                        >
+                            {registerStatus}
+                        </span>
 
                         <div className="inputDiv">
                             <label htmlFor="username">Username</label>

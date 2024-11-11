@@ -92,7 +92,7 @@ const Login = () => {
                             className={`statusMessage ${loginStatus ? 'showMessage' : ''} ${loginStatus === 'Login successful!' ? 'successMessage' : ''}`}
                             aria-live="assertive"
                         >
-                            {registerStatus}
+                            {loginStatus}
                         </span>
 
                         <div className="inputDiv">

@@ -15,51 +15,60 @@ const Login = () => {
     const [loginStatus, setLoginStatus] = useState('');
     const [statusHolder, setStatusHolder] = useState('message');
     const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(false);  // Added loading state
+    const [isLoading, setIsLoading] = useState(false);  
     const navigateTo = useNavigate();
 
     const loginUser = (e) => {
         e.preventDefault();
-        setErrors({}); // Reset errors before each new request
-        setLoginStatus('');  // Clear previous status messages
-        setIsLoading(true);   // Start loading state
+        setErrors({});
+        setLoginStatus('');  
+        setIsLoading(true);   
 
-        // Make API request to login
         Axios.post('https://mini-project-api-six.vercel.app/auth/login', {
             username: loginUserName,
             password: loginPassword
         })
         .then((response) => {
-            setIsLoading(false);  // Stop loading state
+            setIsLoading(false);  
             if (!response.data.success) {
                 setLoginStatus(response.data.message || 'Login failed.');
                 setStatusHolder('showMessage');
-                navigateTo('/'); // Redirect to the home page if login fails
+                setLoginUserName(''); 
+                setLoginPassword(''); 
+                setTimeout(() => {
+                    setLoginStatus(''); // Hide error message after 2 seconds
+                    setStatusHolder('message');
+                }, 2000);
             } else {
-                setLoginStatus("Login successful!"); // Success message
+                setLoginStatus("Login successful!");
                 setStatusHolder('showMessage');
-                navigateTo('/dashboard'); // Redirect to the dashboard on success
+                navigateTo('/dashboard'); 
             }
         })
         .catch((error) => {
-            setIsLoading(false);  // Stop loading state
+            setIsLoading(false);  
             if (error.response && error.response.data.errors) {
-                // Handle backend validation errors
                 setErrors(error.response.data.errors);
             } else {
                 setLoginStatus(error.response ? error.response.data.message : 'An error occurred.');
             }
-            setStatusHolder('showMessage');  // Show message in case of error
+            setStatusHolder('showMessage');  
+            setLoginUserName(''); 
+            setLoginPassword(''); 
+            setTimeout(() => {
+                setLoginStatus(''); 
+                setStatusHolder('message');
+            }, 2000);
         });
     };
 
     useEffect(() => {
         if (loginStatus) {
-            setStatusHolder('showMessage'); // Show the status message
+            setStatusHolder('showMessage');
             const timer = setTimeout(() => {
-                setStatusHolder('message'); // Hide the status message after 2 seconds
+                setStatusHolder('message');
             }, 2000);
-            return () => clearTimeout(timer); // Clean up the timer
+            return () => clearTimeout(timer); 
         }
     }, [loginStatus]);
 
@@ -87,7 +96,6 @@ const Login = () => {
                     </div>
 
                     <form className="form grid" onSubmit={loginUser}>
-                        {/* Status message */}
                         <span
                             className={`statusMessage ${loginStatus ? 'showMessage' : ''} ${loginStatus === 'Login successful!' ? 'successMessage' : ''}`}
                             aria-live="assertive"
@@ -107,7 +115,6 @@ const Login = () => {
                                     value={loginUserName}
                                 />
                             </div>
-                            {/* Display error if exists for username */}
                             {errors.username && <small className="errorText">{errors.username.join(', ')}</small>}
                         </div>
 
@@ -123,17 +130,16 @@ const Login = () => {
                                     value={loginPassword}
                                 />
                             </div>
-                            {/* Display error if exists for password */}
                             {errors.password && <small className="errorText">{errors.password.join(', ')}</small>}
                         </div>
 
                         <button
                             type="submit"
                             className="btn flex"
-                            disabled={isLoading} // Disable the button while loading
+                            disabled={isLoading} 
                         >
                             {isLoading ? (
-                                <span>Loading...</span>  // Show loading text when waiting
+                                <span>Loading...</span>  
                             ) : (
                                 <>
                                     <span>Login</span>

@@ -9,9 +9,9 @@ function Dashboard() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const validTypes = ['image/jpg'];
       if (!validTypes.includes(file.type)) {
-        setResult('Invalid file type. Please upload JPG, PNG, or GIF format.');
+        setResult('Invalid file type. Please upload a JPG format.');
         setImagePreview(null); // Clear preview if invalid file
         return;
       }

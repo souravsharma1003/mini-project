@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Login.css';
 import '../../App.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import video from '../../Assets/video.mp4';
 import logo from '../../Assets/logo.png';
@@ -36,7 +36,7 @@ const Login = () => {
                 setLoginUserName(''); 
                 setLoginPassword(''); 
                 setTimeout(() => {
-                    setLoginStatus(''); // Hide error message after 2 seconds
+                    setLoginStatus(''); 
                     setStatusHolder('message');
                 }, 2000);
             } else {
@@ -83,9 +83,12 @@ const Login = () => {
                     </div>
                     <div className="footerDiv flex">
                         <span className="text">Don't have an account?</span>
-                        <Link to={'/signup'}>
-                            <button className="btn">Sign Up</button>
-                        </Link>
+                        <button
+                            className="btn"
+                            onClick={() => navigateTo('/signup')}
+                        >
+                            Sign Up
+                        </button>
                     </div>
                 </div>
 

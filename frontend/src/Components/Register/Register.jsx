@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Register.css';
 import '../../App.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 import video from '../../Assets/video.mp4';
 import logo from '../../Assets/logo.png';
@@ -17,7 +17,7 @@ const Register = () => {
     const [registerStatus, setRegisterStatus] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState({});
-    const navigateTo = useNavigate();
+    const navigate = useNavigate(); // Renamed for clarity
 
     const handleSignup = (e) => {
         e.preventDefault();
@@ -29,14 +29,14 @@ const Register = () => {
         Axios.post('https://mini-project-api-six.vercel.app/auth/signup', {
             email: email,
             username: userName,
-            password: password
+            password: password,
         })
             .then((response) => {
                 setIsLoading(false);
                 if (response.data.success) {
                     setRegisterStatus('Registration successful!');
                     setTimeout(() => {
-                        navigateTo('/login');
+                        navigate('/login'); // Navigate programmatically
                     }, 2000);
                 } else {
                     setRegisterStatus(response.data.message || 'Signup failed.');
@@ -48,7 +48,7 @@ const Register = () => {
             .catch((error) => {
                 setIsLoading(false);
                 if (error.response && error.response.data.errors) {
-                    // Handle the field-specific errors sent from the backend
+                    // Handle field-specific errors sent from the backend
                     setErrors(error.response.data.errors);
                 } else {
                     setRegisterStatus(error.response ? error.response.data.message : 'An error occurred.');
@@ -78,22 +78,25 @@ const Register = () => {
                     </div>
                     <div className="footerDiv flex">
                         <span className="text">Have an account?</span>
-                        <Link to={'/login'}>
-                            <button className="btn">Login</button>
-                        </Link>
+                        {/* Add navigation to the Login page using button */}
+                        <button className="btn" onClick={() => navigate('/login')}>
+                            Login
+                        </button>
                     </div>
                 </div>
 
                 <div className="formDiv flex">
                     <div className="headerDiv">
-                        <img className="logo" src={logo} alt="Logo Image" />
+                        <img className="logo" src={logo} alt="Logo" />
                         <h3>Let Us Know You!</h3>
                     </div>
 
                     <form className="form grid" onSubmit={handleSignup}>
                         {/* Status message */}
                         <span
-                            className={`statusMessage ${registerStatus ? 'showMessage' : ''} ${registerStatus === 'Registration successful!' ? 'successMessage' : ''}`}
+                            className={`statusMessage ${registerStatus ? 'showMessage' : ''} ${
+                                registerStatus === 'Registration successful!' ? 'successMessage' : ''
+                            }`}
                             aria-live="assertive"
                         >
                             {registerStatus}

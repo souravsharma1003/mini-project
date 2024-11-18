@@ -90,6 +90,7 @@ video {
   border-radius: 8px;
   padding: 0.8rem 1rem;
   color: var(--greyText);
+  margin:0px;
 }
 
 .btn .icon {
